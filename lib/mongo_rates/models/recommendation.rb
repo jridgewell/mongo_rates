@@ -9,14 +9,16 @@ module MongoRates
       belongs_to :rateable, :polymorphic => true, :required => true
       key :value, Integer, :numeric => true
 
-      def self.of_type(type)
-        where(:rateable_type => type.to_s.classify) unless type.nil?
-      end
-
-      def self.for_person(person)
+      scope :of_type, lambda { |type|
+        return self.query unless type
+        where(:rateable_type => type.to_s.classify)
+      }
+      scope :for_person, lambda { |person|
+        return self.query unless person
         person = MongoRates::Models::PersonRating.by_person!(person)
         where(:person_rating_id => person.id)
-      end
+      }
+
 
       def self.update_recommendations(person = nil, options = {})
         everyone = MongoRates::Models::PersonRating.all
