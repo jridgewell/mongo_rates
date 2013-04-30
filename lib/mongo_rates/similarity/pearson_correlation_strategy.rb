@@ -28,7 +28,7 @@ module MongoRates
         den_other   = sum_squares_other - (sum_ratings_other ** 2) / number_shared
         denominator = Math.sqrt(den_person * den_other)
 
-        return 1 if denominator == 0
+        return 0 if denominator == 0
         numerator / denominator
       end
     end
