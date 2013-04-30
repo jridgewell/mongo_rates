@@ -30,11 +30,6 @@ module MongoRates
         { :person_type => person.class.to_s, :person_id => person.id }
       end
 
-      def self.all_persons
-        fields(:person_type, :person_id).all.map do |person|
-          { :person_type => person.person_type, :person_id => person.person_id }
-        end
-      end
     end
   end
 end
