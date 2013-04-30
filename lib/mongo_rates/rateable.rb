@@ -32,7 +32,7 @@ module MongoRates
       end
 
       def persons_rating(person)
-        person = MongoRates::Models::PersonRating.by_person(person)
+        person = MongoRates::Models::PersonRating.find_person(person)
         return nil unless person
 
         ratings.first(:person_rating_id => person.id)

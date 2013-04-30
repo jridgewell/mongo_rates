@@ -5,8 +5,8 @@ module MongoRates
         strategy = load_strategy options[:strategy]
         strategy.ratings_hash = create_ratings_to_hash(person, other)
 
-        person_key = MongoRates.polymorphic_to_key( MongoRates::Models::PersonRating.by_person person )
-        other_key = MongoRates.polymorphic_to_key( MongoRates::Models::PersonRating.by_person other )
+        person_key = MongoRates.polymorphic_to_key( MongoRates::Models::PersonRating.find_person person )
+        other_key = MongoRates.polymorphic_to_key( MongoRates::Models::PersonRating.find_person other )
 
         strategy.similarity_between(person_key, other_key)
       end

@@ -15,7 +15,7 @@ module MongoRates
       }
       scope :for_person, lambda { |person|
         return self.query unless person
-        person = MongoRates::Models::PersonRating.by_person!(person)
+        person = MongoRates::Models::PersonRating.find_person!(person)
         where(:person_rating_id => person.id)
       }
 
@@ -23,7 +23,7 @@ module MongoRates
       def self.update_recommendations(person = nil, options = {})
         everyone = MongoRates::Models::PersonRating.all
         persons_to_update = if person
-                              [MongoRates::Models::PersonRating.by_person(person)]
+                              [MongoRates::Models::PersonRating.find_person!(person)]
                             else
                               everyone
                             end

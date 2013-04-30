@@ -16,7 +16,7 @@ module MongoRates
 
       scope :by_person, lambda { |person|
         return self.query unless person
-        person = MongoRates::Models::PersonRating.by_person!(person)
+        person = MongoRates::Models::PersonRating.find_person!(person)
         where(:person_rating_id => person.id)
       }
 

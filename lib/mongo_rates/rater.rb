@@ -15,7 +15,7 @@ module MongoRates
 
     module RaterMethods
       def rate(rateable, value)
-        person = MongoRates::Models::PersonRating.by_person!(self)
+        person = MongoRates::Models::PersonRating.find_person!(self)
         rateable_query = MongoRates::Models::Rating.rateable_to_query(rateable)
         rating_query = rateable_query.merge({:person_rating_id => person.id})
 
