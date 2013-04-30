@@ -9,18 +9,21 @@ module MongoRates
       many :ratings, :class_name => 'MongoRates::Models::Rating'
       many :recommendations, :class_name => 'MongoRates::Models::Recommendation'
 
-      def self.by_person_hash(person_hash)
-        first(person_hash)
+      def self.find_person_with_hash(person_hash, options = {})
+        person = first(person_hash)
+        return person unless options[:create]
+
+        person = create(person_hash) if person.nil?
+        person
       end
 
-      def self.by_person(person)
+      def self.find_person(person, options = {})
         return person if person.class == self
-        by_person_hash person_to_query(person)
+        find_person_with_hash person_to_query(person), options
       end
 
-      def self.by_person!(person)
-        person_hash = person_to_query(person)
-        by_person_hash(person_hash) || create(person_hash)
+      def self.find_person!(person)
+        find_person person, :create => true
       end
 
       def self.person_to_query(person)
