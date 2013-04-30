@@ -30,6 +30,9 @@ module MongoRates
         ratings = MongoRates::Similarity::Engine.create_ratings_to_hash
 
         persons_to_update.each do |person|
+          for_person.each do |rating|
+            rating.destroy
+          end
           person_key = MongoRates.polymorphic_to_key(person)
           predicted_ratings_for_user = {}
           everyone.each do |other|
