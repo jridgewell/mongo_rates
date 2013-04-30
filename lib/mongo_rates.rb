@@ -3,13 +3,13 @@ require 'active_support'
 require 'mongo_rates/version'
 
 module MongoRates
+  autoload :Rater, 'mongo_rates/rater'
+  autoload :Rateable, 'mongo_rates/rateable'
 
   module Models
-    autoload :Person, 'mongo_rates/models/person'
     autoload :PersonRating, 'mongo_rates/models/person_rating'
     autoload :Rating, 'mongo_rates/models/rating'
     autoload :Recommendation, 'mongo_rates/models/recommendation'
-    autoload :Rateable, 'mongo_rates/models/rateable'
   end
 
   module Similarity

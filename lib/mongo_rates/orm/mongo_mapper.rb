@@ -1,4 +1,4 @@
 require 'mongo_mapper'
 
-MongoMapper::Document.plugin(MongoRates::Models::Person)
-MongoMapper::EmbeddedDocument.plugin(MongoRates::Models::Person)
+MongoMapper::Document.plugin(MongoRates::Rater)
+MongoMapper::EmbeddedDocument.plugin(MongoRates::Rater)
