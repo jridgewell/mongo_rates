@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = MongoRates::VERSION
   spec.authors       = ["Justin Ridgewell"]
   spec.email         = ["justin@ridgewell.name"]
-  spec.description   = %q{Ratings and Recommendations using MongoDB}
+  spec.summary       = %q{Ratings and Recommendations using MongoDB}
   spec.homepage      = ""
   spec.license       = "MIT"
 
