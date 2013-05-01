@@ -1,6 +1,6 @@
 # MongoRates
 
-TODO: Write a gem description
+Ratings and Recommendations using MongoDB
 
 ## Installation
 
@@ -18,7 +18,21 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Inside your person (user|alien|etc...) add
+
+    rates :tracks
+
+This will allow you to `rate Track.first, 10`, and get `recommended
+:tracks`.
+This will also include
+
+    rating(person)
+    ratings
+    average_rating
+    rated?
+    persons_rating
+
+to whatever you're rating.
 
 ## Contributing
 
