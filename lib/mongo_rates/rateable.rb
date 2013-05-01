@@ -11,6 +11,11 @@ module MongoRates
     end
 
     module RateableMethods
+      case
+      when  defined?(ActiveRecord::Base)            && ancestors.include?(ActiveRecord::Base),
+            defined?(MongoMapper::Document)         && ancestors.include?(MongoMapper::Document),
+            defined?(MongoMapper::EmbeddedDocument) && ancestors.include?(MongoMapper::EmbeddedDocument)
+        before_destroy :destory_rateable
       end
 
       def rating(person = nil)
@@ -54,6 +59,12 @@ module MongoRates
       end
 
       private
+      def destory_rateable
+        ratings_query.each do |rating|
+          rating.destroy
+        end
+      end
+
       def ratings_query
         ratings_query = MongoRates::Models::Rating.rateable_to_query(self)
         MongoRates::Models::Rating.where(ratings_query)

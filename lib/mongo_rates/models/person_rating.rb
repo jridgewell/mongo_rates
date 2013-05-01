@@ -6,8 +6,8 @@ module MongoRates
       include MongoMapper::Document
 
       belongs_to :person, :polymorphic => true, :required => true
-      many :ratings, :class_name => 'MongoRates::Models::Rating'
-      many :recommendations, :class_name => 'MongoRates::Models::Recommendation'
+      many :ratings, :class_name => 'MongoRates::Models::Rating', :dependent => :destroy
+      many :recommendations, :class_name => 'MongoRates::Models::Recommendation', :dependent => :destroy
 
       def self.find_person_with_hash(person_hash, options = {})
         person = first(person_hash)
