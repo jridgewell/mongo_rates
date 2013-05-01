@@ -27,22 +27,27 @@ module MongoRates
         rating_query = rateable_query.merge({:person_rating_id => person.id})
 
         rating = MongoRates::Models::Rating.first_or_new(rating_query)
-        rating.value = value
-        rating.save
+        if value > 0
+          rating.value = value
+          rating.save
+        else
+          rating.destroy
+        end
+        true
       end
 
       #TODO: Find similar users.
       #def similar(rater)
       #end
 
-      def recommended(rateable)
+      def recommended(rateable = nil)
         MongoRates::Models::Recommendation.for_person(self).of_type(rateable).sort(:value.desc).all.map do |recommendation|
           recommendation.rateable
         end
       end
 
-      def update_recommendations
-        MongoRates::MongoRates::Recommendation.update_recommendations(self)
+      def update_recommendations(options = {})
+        MongoRates::Models::Recommendation.update_recommendations self, options
       end
 
       private
