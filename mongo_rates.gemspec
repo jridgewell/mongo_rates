@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Justin Ridgewell"]
   spec.email         = ["justin@ridgewell.name"]
   spec.summary       = %q{Ratings and Recommendations using MongoDB}
-  spec.homepage      = ""
+  spec.homepage      = %q{https://github.com/jridgewell/mongo_rates}
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
