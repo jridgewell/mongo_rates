@@ -31,7 +31,7 @@ module MongoRates
         ratings = MongoRates::Similarity::Engine.create_ratings_to_hash
 
         persons_to_update.each do |person|
-          for_person.each do |rating|
+          for_person(person).each do |rating|
             rating.destroy
           end
           person_key = MongoRates.polymorphic_to_key(person)
@@ -53,7 +53,7 @@ module MongoRates
           end
 
           guessed_rating_and_query = Proc.new do |item, item_data|
-            query_match = item.to_s.match(/(\w+)(\d+)/)
+            query_match = item.to_s.match(/(\D+)(\d+)/)
             {
               :value => item_data[:weighted_mean] / item_data[:total_similarity],
               :query => {
@@ -63,7 +63,7 @@ module MongoRates
             }
           end
 
-          top = predicted_ratings_for_user.map(&guessed_rating_and_query).sort(&:first).reverse
+          top = predicted_ratings_for_user.map(&guessed_rating_and_query).sort_by{ |rating| rating[:value] }.reverse
 
           top.each do |value_query|
             query = { :person_rating_id => person.id }
