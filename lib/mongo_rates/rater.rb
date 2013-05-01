@@ -7,7 +7,7 @@ module MongoRates
     module ClassMethods
       def recommends(*rateables)
         rateables.each do |rateable|
-          MongoRates.to_class_string(rateable).constantize.send :include, MongoRates::Rateable
+          MongoRates.to_class_string(rateable).constantize.send :include, MongoRates::Rateable::RateableMethods
         end
         self.send :include, RaterMethods
       end

@@ -4,7 +4,13 @@ module MongoRates
   module Rateable
     extend ActiveSupport::Concern
 
-    included do
+    module ClassMethods
+      def recommendable
+        self.send :include, RateableMethods
+      end
+    end
+
+    module RateableMethods
       def ratings
         ratings_query = MongoRates::Models::Rating.rateable_to_query(self)
         MongoRates::Models::Rating.where(ratings_query)
