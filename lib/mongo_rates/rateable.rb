@@ -5,7 +5,7 @@ module MongoRates
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def recommendable
+      def rateable
         self.send :include, RateableMethods
       end
     end

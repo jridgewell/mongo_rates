@@ -5,7 +5,7 @@ module MongoRates
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def recommends(*rateables)
+      def rates(*rateables)
         rateables.each do |rateable|
           MongoRates.to_class_string(rateable).constantize.send :include, MongoRates::Rateable::RateableMethods
         end
