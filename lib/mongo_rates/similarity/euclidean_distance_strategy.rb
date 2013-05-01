@@ -6,7 +6,7 @@ module MongoRates
 
         return 0 if shared.empty?
 
-        sum_of_squares = shared.inject(0.0) { |sum, item|
+        sum_of_squares = shared.reduce(0.0) { |sum, item|
           sum + (ratings_hash[person][item] - ratings_hash[other][item]) ** 2
         }
 
