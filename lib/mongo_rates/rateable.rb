@@ -19,7 +19,6 @@ module MongoRates
       end
 
       def average_rating
-        rateable_ratings = ratings
         return 0 if ratings.empty?
 
         map = %Q(function() {
@@ -32,7 +31,7 @@ module MongoRates
         })
         output_collection = "mongo_rates.models.ratings.#{self.class.to_s.downcase}#{id}"
 
-        rateable_ratings.collection.map_reduce(map, reduce, :out => output_collection).find()
+        ratings.collection.map_reduce(map, reduce, :out => output_collection).find().first()['value']
       end
 
       def rated?
@@ -43,7 +42,8 @@ module MongoRates
         person = MongoRates::Models::PersonRating.find_person(person)
         return nil unless person
 
-        ratings.first(:person_rating_id => person.id)
+        rating = ratings.first(:person_rating_id => person.id)
+        rating.value if rating
       end
     end
   end
