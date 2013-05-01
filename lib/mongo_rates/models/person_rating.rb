@@ -27,7 +27,8 @@ module MongoRates
       end
 
       def self.person_to_query(person)
-        { :person_type => person.class.to_s, :person_id => person.id }
+        type_name = MongoRates.to_class_string person
+        { :person_type => type_name, :person_id => person.id }
       end
 
     end

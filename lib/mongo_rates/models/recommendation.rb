@@ -11,7 +11,8 @@ module MongoRates
 
       scope :of_type, lambda { |type|
         return self.query unless type
-        where(:rateable_type => type.to_s.classify)
+        type_name = MongoRates.to_class_string type
+        where(:rateable_type => type_name)
       }
       scope :for_person, lambda { |person|
         return self.query unless person

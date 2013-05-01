@@ -19,6 +19,10 @@ module MongoRates
     autoload :Engine, 'mongo_rates/similarity/engine'
   end
 
+  def self.to_class_string(obj)
+    obj.to_s.gsub(/^#<(\w+):0x[0-9a-f]+>$/,'\1').classify
+  end
+
   def self.polymorphic_to_key(poly)
     regex = /(.+)_type/
     poly_name = nil

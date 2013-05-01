@@ -11,7 +11,8 @@ module MongoRates
 
       scope :of_type, lambda { |type|
         return self.query unless type
-        where(:rateable_type => type.to_s.classify)
+        type_name = MongoRates.to_class_string type
+        where(:rateable_type => type_name)
       }
 
       scope :by_person, lambda { |person|
@@ -21,7 +22,8 @@ module MongoRates
       }
 
       def self.rateable_to_query(rateable)
-        { :rateable_type => rateable.class.to_s, :rateable_id => rateable.id}
+        type_name = MongoRates.to_class_string rateable
+        { :rateable_type => type_name, :rateable_id => rateable.id}
       end
 
       def self.group_by_person(options = {})
