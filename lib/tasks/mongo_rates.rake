@@ -1,15 +1,16 @@
 require 'rake'
 
 namespace :mongo_rates do
-  task :update_recommended, [:person, :id, :strategy] => :environment do |t, args|
-    person, id = args[:person], args[:id]
+  desc 'Update Recommendations.'
+  task :recommendations, [:person, :id, :strategy] => :environment do |t, args|
     options = {}
-    options[:strategy] = args[:strategy]
+    options[:strategy] = args[:strategy].to_sym
+
     person_to_update = nil
-    if person && id
-      person = person.to_s.classify.constantize
-      person_to_update = person.find(id)
+    if args[:person] && args[:id]
+      person = MongoRates.to_class_string(args[:person]).constantize
+      person_to_update = person.find(args[:id])
     end
-    MongoRates::Models::Recommendation.update_recommendations person_to_update
+    MongoRates::Models::Recommendation.update_recommendations person_to_update, options
   end
 end
