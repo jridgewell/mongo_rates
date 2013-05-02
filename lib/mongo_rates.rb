@@ -7,7 +7,7 @@ module MongoRates
   autoload :Rateable, 'mongo_rates/rateable'
 
   module Models
-    autoload :PersonRating, 'mongo_rates/models/person_rating'
+    autoload :Person, 'mongo_rates/models/person'
     autoload :Rating, 'mongo_rates/models/rating'
     autoload :Recommendation, 'mongo_rates/models/recommendation'
   end

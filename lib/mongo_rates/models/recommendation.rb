@@ -5,7 +5,7 @@ module MongoRates
     class Recommendation
       include MongoMapper::Document
 
-      belongs_to :person_rating, :class_name => 'MongoRates::Models::PersonRating', :required => true
+      belongs_to :person, :class_name => 'MongoRates::Models::Person', :required => true
       belongs_to :rateable, :polymorphic => true, :required => true
       key :value, Integer, :numeric => true
 
@@ -16,15 +16,15 @@ module MongoRates
       }
       scope :for_person, lambda { |person|
         return self.query unless person
-        person = MongoRates::Models::PersonRating.find_person!(person)
-        where(:person_rating_id => person.id)
+        person = MongoRates::Models::Person.find_person!(person)
+        where(:person_id => person.id)
       }
 
 
       def self.update_recommendations(person = nil, options = {})
-        everyone = MongoRates::Models::PersonRating.all
+        everyone = MongoRates::Models::Person.all
         persons_to_update = if person
-                              [MongoRates::Models::PersonRating.find_person!(person)]
+                              [MongoRates::Models::Person.find_person!(person)]
                             else
                               everyone
                             end
@@ -66,7 +66,7 @@ module MongoRates
           top = predicted_ratings_for_user.map(&guessed_rating_and_query).sort_by{ |rating| rating[:value] }.reverse
 
           top.each do |value_query|
-            query = { :person_rating_id => person.id }
+            query = { :person_id => person.id }
             query.merge! value_query[:query]
             recommendation = first_or_new query
             recommendation.value = value_query[:value].to_i

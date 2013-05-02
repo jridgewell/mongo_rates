@@ -5,7 +5,7 @@ module MongoRates
     class Rating
       include MongoMapper::Document
 
-      belongs_to :person_rating, :class_name => 'MongoRates::Models::PersonRating', :required => true
+      belongs_to :person, :class_name => 'MongoRates::Models::Person', :required => true
       belongs_to :rateable, :polymorphic => true, :required => true
       key :value, Integer, :numeric => true
 
@@ -17,8 +17,8 @@ module MongoRates
 
       scope :by_person, lambda { |person|
         return self.query unless person
-        person = MongoRates::Models::PersonRating.find_person!(person)
-        where(:person_rating_id => person.id)
+        person = MongoRates::Models::Person.find_person!(person)
+        where(:person_id => person.id)
       }
 
       def self.rateable_to_query(rateable)
@@ -32,7 +32,7 @@ module MongoRates
           var columns = {},
               key = this.rateable_type + this.rateable_id;
           columns[key] = this.value;
-          emit(this.person_rating_id, columns);
+          emit(this.person_id, columns);
         })
 
         reduce = %Q(function(id, values) {

@@ -4,7 +4,7 @@ namespace :mongo_rates do
   desc 'Update Recommendations.'
   task :recommendations, [:person, :id, :strategy] => :environment do |t, args|
     options = {}
-    options[:strategy] = args[:strategy].to_sym
+    options[:strategy] = args[:strategy].to_sym if args[:strategy]
 
     person_to_update = nil
     if args[:person] && args[:id]

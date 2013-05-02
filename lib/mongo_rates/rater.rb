@@ -22,9 +22,9 @@ module MongoRates
       end
 
       def rate(rateable, value)
-        person = MongoRates::Models::PersonRating.find_person!(self)
+        person = MongoRates::Models::Person.find_person!(self)
         rateable_query = MongoRates::Models::Rating.rateable_to_query(rateable)
-        rating_query = rateable_query.merge({:person_rating_id => person.id})
+        rating_query = rateable_query.merge({:person_id => person.id})
 
         rating = MongoRates::Models::Rating.first_or_new(rating_query)
         if value > 0
@@ -52,7 +52,7 @@ module MongoRates
 
       private
       def destory_person
-        person = MongoRates::Models::PersonRating.find_person(self)
+        person = MongoRates::Models::Person.find_person(self)
         person.destroy if person
       end
     end
