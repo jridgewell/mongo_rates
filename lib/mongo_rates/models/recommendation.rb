@@ -32,11 +32,12 @@ module MongoRates
         ratings = MongoRates::Models::Rating.persons_ratings_to_hash
 
         persons_to_update.each do |person|
-          for_person(person).each do |rating|
-            rating.destroy
+          for_person(person).each do |recommendation|
+            recommendation.destroy
           end
           person_key = MongoRates.polymorphic_to_key(person)
           predicted_ratings_for_user = {}
+
           everyone.each do |other|
             next if person == other
             other_key = MongoRates.polymorphic_to_key(other)
@@ -45,7 +46,7 @@ module MongoRates
             next if similarity == 0
 
             ratings[other_key].each do |item, value|
-              unless ratings[person_key].keys.include?(item)
+              unless ratings[person_key][item]
                 predicted_ratings_for_user[item] ||= { :total_similarity => 0.0, :weighted_mean => 0.0 }
                 predicted_ratings_for_user[item][:total_similarity] += similarity
                 predicted_ratings_for_user[item][:weighted_mean] += value * similarity
@@ -53,7 +54,7 @@ module MongoRates
             end
           end
 
-          guessed_rating_and_query = Proc.new do |item, item_data|
+          to_value_and_query = Proc.new do |item, item_data|
             query_match = item.to_s.match(/(\D+)(\d+)/)
             {
               :value => item_data[:weighted_mean] / item_data[:total_similarity],
@@ -64,14 +65,11 @@ module MongoRates
             }
           end
 
-          top = predicted_ratings_for_user.map(&guessed_rating_and_query).sort_by{ |rating| rating[:value] }.reverse
-
-          top.each do |value_query|
-            query = { :person_id => person.id }
-            query.merge! value_query[:query]
-            recommendation = first_or_new query
-            recommendation.value = value_query[:value].to_i
-            recommendation.save
+          predicted_ratings_for_user.map(&to_value_and_query).each do |value_query|
+            new(value_query.query).tap { |recommendation|
+              recommendation.person_id = person.id
+              recommendation.value = value_query[:value].to_i
+            }.save
           end
         end
       end
