@@ -2,7 +2,7 @@ require 'mongo_mapper'
 
 module MongoRates
   module Models
-    class PersonRating
+    class Person
       include MongoMapper::Document
 
       belongs_to :person, :polymorphic => true, :required => true

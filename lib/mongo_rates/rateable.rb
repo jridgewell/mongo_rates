@@ -51,10 +51,10 @@ module MongoRates
       end
 
       def persons_rating(person)
-        person = MongoRates::Models::PersonRating.find_person(person)
+        person = MongoRates::Models::Person.find_person(person)
         return nil unless person
 
-        rating = ratings_query.first(:person_rating_id => person.id)
+        rating = ratings_query.first(:person_id => person.id)
         rating.value if rating
       end
 
