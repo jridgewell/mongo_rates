@@ -51,10 +51,12 @@ module MongoRates
       end
 
       private
+
       def destory_person
         person = MongoRates::Models::Person.find_person(self)
         person.destroy if person
       end
+
     end
   end
 end

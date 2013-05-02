@@ -9,14 +9,6 @@ module MongoRates
       many :ratings, :class_name => 'MongoRates::Models::Rating', :dependent => :destroy
       many :recommendations, :class_name => 'MongoRates::Models::Recommendation', :dependent => :destroy
 
-      def self.find_person_with_hash(person_hash, options = {})
-        person = first(person_hash)
-        return person unless options[:create]
-
-        person = create(person_hash) if person.nil?
-        person
-      end
-
       def self.find_person(person, options = {})
         return person if person.class == self
         find_person_with_hash person_to_query(person), options
@@ -24,6 +16,16 @@ module MongoRates
 
       def self.find_person!(person)
         find_person person, :create => true
+      end
+
+      protected
+
+      def self.find_person_with_hash(person_hash, options = {})
+        person = first(person_hash)
+        return person unless options[:create]
+
+        person = create(person_hash) if person.nil?
+        person
       end
 
       def self.person_to_query(person)

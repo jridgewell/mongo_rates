@@ -14,6 +14,7 @@ module MongoRates
         type_name = MongoRates.to_class_string type
         where(:rateable_type => type_name)
       }
+
       scope :for_person, lambda { |person|
         return self.query unless person
         person = MongoRates::Models::Person.find_person!(person)
@@ -28,7 +29,7 @@ module MongoRates
                             else
                               everyone
                             end
-        ratings = MongoRates::Similarity::Engine.create_ratings_to_hash
+        ratings = MongoRates::Models::Rating.persons_ratings_to_hash
 
         persons_to_update.each do |person|
           for_person(person).each do |rating|

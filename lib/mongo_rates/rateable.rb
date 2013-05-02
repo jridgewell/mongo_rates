@@ -59,6 +59,7 @@ module MongoRates
       end
 
       private
+
       def destory_rateable
         ratings_query.each do |rating|
           rating.destroy
@@ -69,6 +70,7 @@ module MongoRates
         ratings_query = MongoRates::Models::Rating.rateable_to_query(self)
         MongoRates::Models::Rating.where(ratings_query)
       end
+
     end
   end
 end

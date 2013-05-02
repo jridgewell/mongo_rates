@@ -3,7 +3,7 @@ module MongoRates
     class Engine
       def self.similarity_between(person, other, options = {})
         strategy = load_strategy options[:strategy]
-        strategy.ratings_hash = create_ratings_to_hash(person, other)
+        strategy.ratings_hash = MongoRates::Models::Rating.persons_ratings_to_hash(person, other)
 
         person_key = MongoRates.polymorphic_to_key( MongoRates::Models::Person.find_person person )
         other_key = MongoRates.polymorphic_to_key( MongoRates::Models::Person.find_person other )
@@ -12,32 +12,6 @@ module MongoRates
       end
 
       protected
-
-      def self.create_ratings_to_hash(*persons)
-        persons.flatten!
-
-        return ratings_to_hash MongoRates::Models::Rating.all if persons.empty?
-
-        hash = {}
-        persons.each do |person|
-          ratings = MongoRates::Models::Rating.by_person(person)
-          hash.merge!(ratings_to_hash(ratings))
-        end
-        hash
-      end
-
-      def self.ratings_to_hash(ratings)
-        hash = {}
-        ratings.each do |rating|
-          person = rating.person
-          person_key = MongoRates.polymorphic_to_key(person)
-          hash[person_key] ||= {}
-
-          rating_key = (rating.rateable_type + rating.rateable_id.to_s).to_sym
-          hash[person_key][rating_key] = rating.value
-        end
-        hash
-      end
 
       def self.load_strategy(key)
         case key

@@ -26,28 +26,34 @@ module MongoRates
         { :rateable_type => type_name, :rateable_id => rateable.id}
       end
 
-      def self.group_by_person(options = {})
-        options[:out] = 'mongo_rates.models.ratings.by_person' unless options[:out]
-        map = %Q(function() {
-          var columns = {},
-              key = this.rateable_type + this.rateable_id;
-          columns[key] = this.value;
-          emit(this.person_id, columns);
-        })
+      def self.persons_ratings_to_hash(*persons)
+        persons.flatten!
 
-        reduce = %Q(function(id, values) {
-          var vals = {};
-          values.forEach(function(val, index) {
-            for (var rateable in val) {
-              vals[rateable] = val[rateable];
-              break; // Since their's only one key in each object
-            }
-          });
-          return vals;
-        })
+        return ratings_to_hash MongoRates::Models::Rating.all if persons.empty?
 
-        collection.map_reduce(map, reduce, options).find()
+        hash = {}
+        persons.each do |person|
+          ratings = MongoRates::Models::Rating.by_person(person)
+          hash.merge!(ratings_to_hash(ratings))
+        end
+        hash
       end
+
+      protected
+
+      def self.ratings_to_hash(ratings)
+        hash = {}
+        ratings.each do |rating|
+          person = rating.person
+          person_key = MongoRates.polymorphic_to_key(person)
+          hash[person_key] ||= {}
+
+          rating_key = (rating.rateable_type + rating.rateable_id.to_s).to_sym
+          hash[person_key][rating_key] = rating.value
+        end
+        hash
+      end
+
     end
   end
 end
