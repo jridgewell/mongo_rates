@@ -27,7 +27,16 @@ module MongoRates
       end
 
       def ratings
-        ratings_query.all
+        ratings_query.map do |rating|
+          rating.value
+        end
+      end
+
+      def ratings_with_rater
+        MongoRates::Models::Person.all #eager load all Persons
+        ratings_query.map do |rating|
+          { :rater => rating.person.person, :value => rating.value }
+        end
       end
 
       def average_rating

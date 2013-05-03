@@ -4,6 +4,7 @@ module MongoRates
   module Models
     class Person
       include MongoMapper::Document
+      plugin MongoMapper::Plugins::IdentityMap
 
       belongs_to :person, :polymorphic => true, :required => true
       many :ratings, :class_name => 'MongoRates::Models::Rating', :dependent => :destroy
