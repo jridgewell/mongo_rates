@@ -34,6 +34,14 @@ This will also include
 
 to whatever you're rating.
 
+## Prior Art
+
+This gem is influenced by [coletivo](https://github.com/diogenes/coletivo)
+and [recommendable](https://github.com/davidcelis/recommendable). Why not use
+one of them? Recommendable has only a boolean liked/disliked ratings engine,
+and coletivo asks you to manage the database yourself. I also needed the
+recommendations to be handled in MongoDB and neither do that.
+
 ## Contributing
 
 1. Fork it
