@@ -11,11 +11,14 @@ module MongoRates
     end
 
     module RateableMethods
-      case
-      when  defined?(ActiveRecord::Base)            && ancestors.include?(ActiveRecord::Base),
-            defined?(MongoMapper::Document)         && ancestors.include?(MongoMapper::Document),
-            defined?(MongoMapper::EmbeddedDocument) && ancestors.include?(MongoMapper::EmbeddedDocument)
-        before_destroy :destory_rateable
+      extend ActiveSupport::Concern
+      included do
+        case
+        when  defined?(ActiveRecord::Base)            && ancestors.include?(ActiveRecord::Base),
+              defined?(MongoMapper::Document)         && ancestors.include?(MongoMapper::Document),
+              defined?(MongoMapper::EmbeddedDocument) && ancestors.include?(MongoMapper::EmbeddedDocument)
+          before_destroy :destory_rateable
+        end
       end
 
       def rating(person = nil)
@@ -29,13 +32,6 @@ module MongoRates
       def ratings
         ratings_query.map do |rating|
           rating.value
-        end
-      end
-
-      def ratings_with_rater
-        MongoRates::Models::Person.all #eager load all Persons
-        ratings_query.map do |rating|
-          { :rater => rating.person.person, :value => rating.value }
         end
       end
 

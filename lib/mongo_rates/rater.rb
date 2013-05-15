@@ -14,11 +14,14 @@ module MongoRates
     end
 
     module RaterMethods
-      case
-      when  defined?(ActiveRecord::Base)            && ancestors.include?(ActiveRecord::Base),
-            defined?(MongoMapper::Document)         && ancestors.include?(MongoMapper::Document),
-            defined?(MongoMapper::EmbeddedDocument) && ancestors.include?(MongoMapper::EmbeddedDocument)
-        before_destroy :destory_person
+      extend ActiveSupport::Concern
+      included do
+        case
+        when  defined?(ActiveRecord::Base)            && ancestors.include?(ActiveRecord::Base),
+              defined?(MongoMapper::Document)         && ancestors.include?(MongoMapper::Document),
+              defined?(MongoMapper::EmbeddedDocument) && ancestors.include?(MongoMapper::EmbeddedDocument)
+          before_destroy :destory_person
+        end
       end
 
       def rate(rateable, value)
