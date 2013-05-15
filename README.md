@@ -34,6 +34,11 @@ This will also include
 
 to whatever you're rating.
 
+## TODO
+
+1. Finish the specs
+2. Write the documentation
+
 ## Prior Art
 
 This gem is influenced by [coletivo](https://github.com/diogenes/coletivo)
